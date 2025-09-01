@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD using fastapi</title>
+</head>
+
+<style>
+table.dataTable thead .sorting:after,
+table.dataTable thead .sorting:before,
+table.dataTable thead .sorting_asc:after,
+table.dataTable thead .sorting_asc:before,
+table.dataTable thead .sorting_asc_disabled:after,
+table.dataTable thead .sorting_asc_disabled:before,
+table.dataTable thead .sorting_desc:after,
+table.dataTable thead .sorting_desc:before,
+table.dataTable thead .sorting_desc_disabled:after,
+table.dataTable thead .sorting_desc_disabled:before {
+bottom: .5em;
+}
+</style>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<body>
+<header>
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">Navbar</span>
+        </div>
+    </nav>
+</header>
+<main>
+    <div class="vr vr-blurry"></div>
+
+    {% block content %}
+    <div class="container my-2">
+        <div class="display-3">List of Intent  <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addModal">
+                Add new intent
+            </button>
+        </div>
+
+
+        <!-- add a intent -->
+        <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <form action="/add_intent" method="post">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="addModalLabel">Modal title</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col"><label for="intent">Add new intent</label></div>
+                                <div class="col">
+                                    <input type="text" class="form-control" id="intent" name="intent" required>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col">
+                                    <label for="description"> Enter intent description</label>
+                                </div>
+                                <div class="col">
+                                    <input type="text" name="description" id="description" class="form-control"
+                                           required>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <input type="submit" class="btn btn-primary" value="submit">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            {% if intent_error%}
+            <div class="alert alert-warning alert-dismissible fade show "
+                 onclick="this.parentElement.style.display='none';" role="alert">
+                <strong>Intent </strong> already exist
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {%endif%}
+        </div>
+        <table id="dtDynamicVerticalScrollExample" class="table table-striped table-bordered table-sm mt-2"
+               cellspacing="0"
+               width="100%">
+            <thead>
+            <tr>
+                <th>sno</th>
+                <th>intent</th>
+                <th>description</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for intent in intents%}
+            <tr>
+                <td>{{loop.index}}</td>
+                <td>{{intent.intent_name}}</td>
+                <td>{{intent.description}}</td>
+                <td>
+                    <a class="edit-btn" data-id="{{intent._id}}"
+                       data-intent="{{intent.intent_name}}" data-details="{{intent.description}}">
+                        <i class="bi bi-pencil-square"></i></a>
+
+                    <a class="text-danger delete-btn" data-id="{{intent._id}}" data-bs-toggle="modal" data-intent="{{intent.intent_name}}"
+                       data-details="{{intent.description}}">
+                        <i class="bi bi-trash3"></i> </a>
+                </td>
+            </tr>
+            {%endfor%}
+            </tbody>
+        </table>
+    </div>
+    <!-- edit intent -->
+    <div class="modal" id="editModal">
+        <div class="modal-dialog">
+            <form method="post" action="/update_intent">
+                <input type="hidden" class="id" name="id">
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title"></h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col"><label for="intent">Add new intent</label></div>
+                            <div class="col">
+                                <input type="text" class="form-control intent" id="editintent" name="intent" required>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col">
+                                <label for="description"> Enter intent description</label>
+                            </div>
+                            <div class="col">
+                                <input type="text" name="description" id="editdescription"
+                                       class="form-control description"
+                                       required>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <input type="submit" class="btn btn-primary" value="Save Changes">
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteModalLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <form action="/remove_intent" method="post">
+                        <input type="hidden" name="id_intent" class="id_intent">
+                        <input type="submit" class="btn btn-danger" value="Delete Intent">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% endblock content %}
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+        crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function () {
+  $('#dtDynamicVerticalScrollExample').DataTable({
+    "scrollY": "50vh !important",
+    "scrollCollapse": true,
+  });
+  $('.dataTables_length').addClass('bs-select');
+});
+
+
+
+</script>
+
+<script>
+$(document).ready(function() {
+      $('.edit-btn').click(function() {
+        var id = $(this).data('id');
+        var details = $(this).data('details');
+        var intent = $(this).data('intent');
+
+        // Set the ID and details in the modal
+        $('#editModal .modal-title').text('Edit ID: ' + id);
+<!--        $('#editModal .modal-body').html('<p>Details: ' + details + '</p>');-->
+        $('#editModal .intent').val(intent);
+        $('#editModal .id').val(id);
+        $('#editModal .description').val(details);
+        // Show the modal
+        $('#editModal').modal('show');
+      });
+    });
+
+
+
+
+</script>
+
+<script>
+$(document).ready(function() {
+      $('.delete-btn').click(function() {
+        var id = $(this).data('id');
+        var details = $(this).data('details');
+        var intent = $(this).data('intent');
+
+        // Set the ID and details in the modal
+        $('#deleteModal .modal-title').text('Do you really wants to delete this intent ?');
+        $('#deleteModal .modal-body').html('<b>intent: </b>'+intent+'  <br><p><b>Details: </b> ' + details + '</p>');
+        $('#deleteModal .id_intent').val(id);
+        // Show the modal
+        $('#deleteModal').modal('show');
+      });
+    });
+
+
+
+
+</script>
+
+
+</body>

@@ -1,0 +1,7 @@
+fastapi==0.100.0
+# psycopg2-binary==2.9.6 for synconous
+asyncpg==0.28.0 # async
+alembic==1.11.1
+
+sqlmodel==0.0.8
+uvicorn==0.22.0

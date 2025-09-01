@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Display result{% endblock %}
+
+{% block content %}
+
+<div class="p-5 mb-4 bg-body-tertiary rounded-3">
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <strong>{{msg}} !</strong> 
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">pdf to images converted sucessfuly!!!</h1>
+        <h5>Total time taken is {{time}} Sec</h5>
+    </div>
+</div>
+
+
+{% endblock %}

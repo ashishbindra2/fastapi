@@ -1,0 +1,7 @@
+{
+    "python.testing.pytestArgs": [
+        "fastapi_jwt_login"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
+}
