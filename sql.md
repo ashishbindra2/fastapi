@@ -1,19 +1,14 @@
-Got it 👍 You want **teaching notes** to guide interns step by step so they can learn SQLAlchemy (and related concepts like models, CRUD, queries). I'll create a **structured teaching plan** with explanations, examples, and exercises you can directly use when teaching.
+# SQL : SQLAlchemy Training Notes for Interns
 
----
+## **What is SQLAlchemy?**
 
-# 📘 SQLAlchemy Training Notes for Interns
+* A Python library for working with databases.
+* Provides ORM (Object Relational Mapping) → lets us interact with tables using Python classes instead of raw SQL.
 
-## 1. **Introduction**
+**Why use it?**
 
-* **What is SQLAlchemy?**
-
-  * A Python library for working with databases.
-  * Provides ORM (Object Relational Mapping) → lets us interact with tables using Python classes instead of raw SQL.
-* **Why use it?**
-
-  * Cleaner, less error-prone than writing raw SQL.
-  * Easier to maintain and scale applications.
+* Cleaner, less error-prone than writing raw SQL.
+* Easier to maintain and scale applications.
 
 ---
 
@@ -25,6 +20,7 @@ Got it 👍 You want **teaching notes** to guide interns step by step so they ca
    pip install sqlalchemy psycopg2  # for PostgreSQL
    pip install sqlalchemy           # SQLite works out of the box
    ```
+
 2. Create a `database.py` file:
 
    ```python
@@ -40,7 +36,7 @@ Got it 👍 You want **teaching notes** to guide interns step by step so they ca
        pass
    ```
 
-💡 **Teaching tip**: Show them both SQLite (for practice) and Postgres (for real projects).
+💡 **tip**: Show them both SQLite (for practice) and Postgres (for real projects).
 
 ---
 
@@ -184,14 +180,12 @@ db.commit()
 
 Do you want me to **write a day-wise teaching schedule (like Day 1, Day 2, Day 3)** so you can deliver it as a structured training program for your interns?
 
-
-
 Perfect 👍 Let’s turn this into a **structured training schedule** that you can use to **teach interns step by step**.
 I’ll make it **day-wise** with goals, content, and exercises.
 
 ---
 
-# 🗓 SQLAlchemy Training Plan for Interns
+## 🗓 SQLAlchemy Training Plan for Interns
 
 ---
 
@@ -460,14 +454,14 @@ class User(Base):
 
 ## 3. **How They Differ in Type Checkers**
 
-### With `Column`:
+### With `Column`
 
 ```python
 User.username
 # Seen by IDE as: Column[str] | Unknown
 ```
 
-### With `Mapped`:
+### With `Mapped`
 
 ```python
 User.username
@@ -539,7 +533,7 @@ engine = create_engine("sqlite:///:memory:")
 Base.metadata.create_all(engine)
 ```
 
-### Database Schema Generated (SQLite):
+### Database Schema Generated (SQLite)
 
 ```sql
 CREATE TABLE users (
@@ -571,7 +565,7 @@ engine = create_engine("sqlite:///:memory:")
 Base.metadata.create_all(engine)
 ```
 
-### Database Schema Generated (SQLite):
+### Database Schema Generated (SQLite)
 
 ```sql
 CREATE TABLE users (
